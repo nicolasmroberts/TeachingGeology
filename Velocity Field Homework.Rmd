@@ -1,0 +1,177 @@
+---
+title: "Velocity Field Homework"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r}
+# Set the working directory.
+setwd("~/Desktop/geologyGeometryAdvancedStructure")
+
+# Load the necessary R libraries.
+source("library/all.R")
+library("ggplot2") # To install ggplot, type install.packates("ggplot2") into the console. 
+source("advancedStructureFunctions.R") # This is a companion file that contains some functions specifically written for this script. 
+
+```
+
+```{r}
+
+# The velocity gradient tensor L is a tensor that describes the velocity (speed + direction) of all points in space. In this homework, we will use work with the 2D case, in which L is a 2x2 matrix. 
+
+# L takes the form: 
+
+#      | a   b |
+# L =  | c   d |
+
+# Where a, b, c, and d are velocities (instantaneous change in position per unit time). a and b are instantaneous changei in the position in the x direction per unit time, while c and d are instantaneous changes in the position in the y direction per unit time. 
+#         Y
+#         |
+#         |
+#         |
+#         | 
+# ————————|—————————— X
+#         |
+#         |
+#         | 
+#         |
+     
+# Below is an example of a velocity field
+     
+
+#      | a   b |
+# L =  | c   d |
+
+a = 0
+b = 0.2
+c = 0
+d = 0
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DVelocityFieldFromL(a, b, c, d, gridSpacing = 2.5)
+
+# [QUESTION 1]: WHAT TYPE OF DEFORMATION WOULD THIS VELOCITY FIELD LEAD TO?
+
+# ANSWER:
+
+```
+
+```{r}
+# Here is another example of a velocity field:
+
+#      | a   b |
+# L =  | c   d |
+
+a = .1
+b = 0
+c = 0
+d = -.1
+
+
+plot2DVelocityFieldFromL(a, b, c, d, gridSpacing = 2.5)
+
+
+# [QUESTION 2]: WHAT TYPE OF DEFORMATION WOULD THIS VELOCITY FIELD LEAD TO?
+
+# ANSWER:
+
+```
+
+
+```{r}
+
+# Now let's look at a rotation field
+
+#      | a   b |
+# L =  | c   d |
+
+a = 0
+b = 0.1
+c = -.1
+d = 0
+
+plot2DVelocityFieldFromL(a, b, c, d, gridSpacing = 2.5)
+
+
+
+```
+
+```{r}
+# Annnnd another one. 
+
+#      | a   b |
+# L =  | c   d |
+
+a = 0
+b = .1
+c = .1
+d = 0
+
+# Here is how to construct the actual velocity gradient tensor
+L = rbind(c(a, b),
+          c(c, d))
+
+L    #running this line simply desplays L below. 
+
+# [TO THINK ABOUT]: MAKE A PREDICTION--WHAT WILL THIS GRADIENT LOOK LIKE WHEN WE PLOT IT? 
+
+plot2DVelocityFieldFromL(a, b, c, d, gridSpacing = 2.5)
+
+```
+
+
+```{r}
+
+# [QUESTION 3]: Ok, here is a challenge: I want to superimpose two velocity fields. The first is is 
+
+#       |  0  .2 |
+# L1 =  |  0   0 |
+
+# The second one is 
+
+#      | 0   -.1 |
+# L2 = | .1    0 |
+
+
+# Write some code below that accomplishes the following: 
+# [1] Plot each velocity gradient separately
+# [2] Combines the two velocity fields and plots the resultant velocity field. 
+# [3] Explain what you see and why your resulting plot makes sense in terms of what you know about velocity gradient tensors and their decomposition. 
+
+
+```
+
+```{r}
+
+# [QUESTION 4] :
+
+# [A] Use your class notes to break down the following velocity gradient tensor L into distorition rate (strething) tensor D and rotation rate tensor W
+
+#      | .1     .2 |
+# L =  | .05   -.1 |
+
+#      | ?   ? |
+# D =  | ?   ? |
+
+#      | ?   ? |
+# W =  | ?   ? |
+
+# [B] Plot L, D, and W. 
+
+# [C] Use what you know about how D and W are related to L to graphically check that you correctly computed D and L. EXPLAIN YOUR APPROACH
+
+
+```
+
+
+
+
+
+
+
+
