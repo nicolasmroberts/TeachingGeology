@@ -1,0 +1,198 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+# Set the working directory.
+setwd("~/Desktop/geologyGeometryAdvancedStructure")
+
+# Load the necessary R libraries.
+source("library/all.R")
+library("ggplot2") # To install ggplot, type install.packages("ggplot2") into the console. 
+source("advancedStructureFunctions.R") # This is a companion file that contains some functions specifically written for this script. 
+```
+
+
+```{r}
+
+# The position gradient tensor F is a tensor that maps material points to absolute positions. In this homework, we will use work with the 2D case, in which L is a 2x2 matrix. 
+
+# F takes the form: 
+
+#      | a   b |
+# F =  | c   d |
+
+# Where a, b, c, and d  relate the position of the material to absolute positions in XY space.
+
+#         Y
+#         |
+#         |
+#         |
+#         | 
+# ————————|—————————— X
+#         |
+#         |
+#         | 
+#         |
+     
+# Below is an example of a position gradient tensor:
+     
+
+#      | 2   0  |
+# F =  | 0  1/2 |
+
+a = 2
+b = 0
+c = 0
+d = 0.5
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DDisplacementFieldFromF(a, b, c, d, gridSpacing = 2.5)
+
+plot2DCircleDisplacementFieldFromF(a, b, c, d)
+
+# [QUESTION 1]: WHAT TYPE OF DEFORMATION WOULD THIS POSITION GRADIENT TENSOR LEAD TO?
+
+# ANSWER:
+
+```
+
+```{r}
+
+#      | 1  1/2 |
+# F =  | 0  1   |
+
+a = 1
+b = 0.5
+c = 0
+d = 1
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DDisplacementFieldFromF(a, b, c, d, gridSpacing = 2.5)
+plot2DCircleDisplacementFieldFromF(a, b, c, d)
+
+# [QUESTION 2]: WHAT TYPE OF DEFORMATION WOULD THIS POSITION GRADIENT TENSOR LEAD TO?
+
+# ANSWER:
+
+```
+
+```{r}
+
+
+
+#      | 1.2  1/2  |
+# F =  | 0   1/1.2 |
+
+a = 1.2
+b = 0.5
+c = 0
+d = 1/1.2
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DDisplacementFieldFromF(a, b, c, d, gridSpacing = 2.5)
+plot2DCircleDisplacementFieldFromF(a, b, c, d)
+
+# [QUESTION 3]: WHAT TYPE OF DEFORMATION WOULD THIS POSITION GRADIENT TENSOR LEAD TO?
+
+# ANSWER:
+
+
+
+
+
+```
+```{r}
+# PLAY AROUND WITH THE VALUES OF a, b, AND d TO GET A SENSE OF WHAT MIXTURES OF THEM DO. HINT: NOTICE THAT IF a AND d ARE NOT INVERSES OF EACH OTHER (e.g. a = 1/d), THEN THE MATERIAL EXPERIENCES DILATION, AKA VOLUME CHANGE. 
+
+#      | ?  ? |
+# F =  | ?  ? |
+
+a = 1
+b = 0.5
+c = 0
+d = 1
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DDisplacementFieldFromF(a, b, c, d, gridSpacing = 2.5)
+plot2DCircleDisplacementFieldFromF(a, b, c, d)
+
+# [QUESTION 4]: WHAT DO a AND d CONTRIBUTE TO THE DISPLACEMENT FIELD? WHAT DO b AND c CONTRIBUTE?
+
+# ANSWER:
+
+
+
+
+```
+
+
+```{r}
+
+# HOLD COMMAND-SHIFT-RETURN (MAC) or CONTROL-SHIFT-RETURN (Windows) TO PLOT BOTH PLOTS 
+
+#      | ?  ? |
+# F =  | ?  ? |
+
+a = 2
+b = 1.3
+c = 0
+d = 1/1.3
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DDisplacementFieldFromF(a, b, c, d, gridSpacing = 2.5, plotPsi = TRUE, plotStrain = TRUE)
+plot2DCircleDisplacementFieldFromF(a, b, c, d, plotStrain = TRUE, plotPsi = TRUE)
+
+# [QUESTION 5]: The black line represents how a vertical line would be offset by the deformation. The grey line in the circle plot is the direction of maximum stretch associated with the finite strain of material affected by this displacement field. Play around with different values in the deformation matrix to interrogate the relationship between these two lines. 
+
+# ANSWER:
+
+```
+
+
+```{r}
+
+# HOLD COMMAND-SHIFT-RETURN (MAC) or CONTROL-SHIFT-RETURN (Windows) TO PLOT BOTH PLOTS 
+
+#      | ?  ? |
+# F =  | ?  ? |
+
+a = 1
+b = 1
+c = 0
+d = 1
+
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DCircleDisplacementFieldFromF(a, b, c, d, plotStrain = TRUE, plotPsi = TRUE)
+
+# [QUESTION 6]: Finally, vary the shear strain, b, and pay attention to how the material line (black) and finite strain (grey) track with the point particles (black to grey dots). With increased amount of shear, does the material line stayed anchored to the same dots? How about the finite strain? Explain why the finite strain and matrial paths behave differently. 
+
+# ANSWER:
+
+
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
