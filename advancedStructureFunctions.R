@@ -21,7 +21,11 @@ plot2DDisplacementFieldFromF = function(a, b, c, d, gridSpacing = 2, radius = 8,
      
      displacementsDataFrame = displacementsFromLocationsAndF(positionGradientTensor, locs)
      
-     offsetMarkerSlope = d / b
+     
+     
+     offsetMarker1 = computeVerticalOffset(positionGradientTensor)
+     
+     
      
      finiteStrain = computeFiniteStrainSemiAxes(positionGradientTensor, radius)
      
@@ -29,9 +33,9 @@ plot2DDisplacementFieldFromF = function(a, b, c, d, gridSpacing = 2, radius = 8,
      minStrain = data.frame(t(finiteStrain[[2]]))
      
      if (plotPsi == TRUE && plotStrain == TRUE){
-          plotFieldWithOffsetAndMaxStrain(displacementsDataFrame, offsetMarker =  offsetMarkerSlope, maxS = maxStrain, minS = minStrain)
+          plotFieldWithOffsetAndMaxStrain(displacementsDataFrame, offsetMarker = offsetMarker1, maxS = maxStrain, minS = minStrain)
      } else if (plotPsi == TRUE && plotStrain == FALSE) {
-          plotFieldWithOffsetMarker(displacementsDataFrame, offsetMarkerSlope)
+          plotFieldWithOffsetMarker(displacementsDataFrame, offsetMarker1)
      } else if (plotPsi == FALSE && plotStrain == TRUE) {
           plotFieldWithMaxStrain(displacementsDataFrame, maxS = maxStrain, minS = minStrain)
      } else if(plotPsi == FALSE && plotStrain == FALSE) {
@@ -46,7 +50,8 @@ plot2DCircleDisplacementFieldFromF = function(a,b,c,d, radius = 8, plotPsi = FAL
      positionGradientTensor = rbind(c(a, b),
                                     c(c, d))
      
-     offsetMarkerSlope = d / b
+     offsetMarker1 = computeVerticalOffset(positionGradientTensor)
+     
      
      finiteStrain = computeFiniteStrainSemiAxes(positionGradientTensor, radius)
      
@@ -56,9 +61,9 @@ plot2DCircleDisplacementFieldFromF = function(a,b,c,d, radius = 8, plotPsi = FAL
      displacementsDataFrame = displacementsFromLocationsAndF(positionGradientTensor, locs)
      
      if (plotPsi == TRUE && plotStrain == TRUE){
-          plotFieldWithOffsetAndMaxStrain(displacementsDataFrame, offsetMarker =  offsetMarkerSlope, maxS = maxStrain, minS = minStrain)
+          plotFieldWithOffsetAndMaxStrain(displacementsDataFrame, offsetMarker =  offsetMarker1, maxS = maxStrain, minS = minStrain)
      } else if (plotPsi == TRUE && plotStrain == FALSE) {
-          plotFieldWithOffsetMarker(displacementsDataFrame, offsetMarkerSlope)
+          plotFieldWithOffsetMarker(displacementsDataFrame, offsetMarker1)
      } else if (plotPsi == FALSE && plotStrain == TRUE) {
           plotFieldWithMaxStrain(displacementsDataFrame, maxS = maxStrain, minS = minStrain)
      } else if(plotPsi == FALSE && plotStrain == FALSE) {
@@ -104,7 +109,7 @@ plotFieldWithOffsetMarker = function(dataFrameWithStartsEnds, offsetMarker) {
           geom_point(data = dataFrameWithStartsEnds, aes(x = xStart, y = yStart), color = "black", size = 3) +
           geom_point(data = dataFrameWithStartsEnds, aes(x = xEnd, y = yEnd), color = "grey", size = 3, alpha = 0.75) +
           geom_segment(data = dataFrameWithStartsEnds, aes(x = xStart, y = yStart, xend = xEnd, yend=yEnd), arrow = arrow(length=unit(3,"pt"), ends="last", type = "closed"), color = "blue") +
-          geom_abline(slope = offsetMarker, intercept = 0) +
+          geom_segment(data = offsetMarker, aes(x = -X1, y = -X2, xend = X1, yend=X2), color = "black", size = 2) +
           theme_void()
 }
 
@@ -117,9 +122,9 @@ plotFieldWithOffsetAndMaxStrain = function(dataFrameWithStartsEnds, maxS, minS, 
           geom_point(data = dataFrameWithStartsEnds, aes(x = xStart, y = yStart), color = "black", size = 3) +
           geom_point(data = dataFrameWithStartsEnds, aes(x = xEnd, y = yEnd), color = "grey", size = 3, alpha = 0.75) +
           geom_segment(data = dataFrameWithStartsEnds, aes(x = xStart, y = yStart, xend = xEnd, yend=yEnd), arrow = arrow(length=unit(3,"pt"), ends="last", type = "closed"), color = "blue") +
-          geom_abline(slope = offsetMarker, intercept = 0) +
           geom_segment(data = maxS, aes(x = -X1, y = -X2, xend = X1, yend=X2), color = "grey", size = 3) +
           geom_segment(data = minS, aes(x = -X1, y = -X2, xend = X1, yend=X2), color = "grey", size = 3) +
+          geom_segment(data = offsetMarker, aes(x = -X1, y = -X2, xend = X1, yend = X2), color = "black", size = 2) +
           theme_void()
 }
 
@@ -189,5 +194,15 @@ computeFiniteStrainAxes = function(positionGradientTensor) {
      finiteStrain = positionGradientTensor %*% t(positionGradientTensor)
      finiteStrainEigens = eigen(finiteStrain)
      return(finiteStrainEigens)
+}
+
+computeVerticalOffset = function(positionGradientTensor) {
+     x = 0
+     y = 10
+     xy = rbind(c(x), c(y))
+     XYend = positionGradientTensor %*% xy
+     Xend = XYend[1,1]
+     Yend = XYend[2,1]
+     return(data.frame(t(c(Xend, Yend))))
 }
 
