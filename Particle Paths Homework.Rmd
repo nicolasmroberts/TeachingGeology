@@ -1,0 +1,147 @@
+---
+title: "Displacement Field HW"
+output: html_notebook
+---
+
+```{r}
+# Set the working directory.
+setwd("~/Desktop/geologyGeometryAdvancedStructure")
+
+# Load the necessary R libraries.
+source("library/all.R")
+library("ggplot2") # To install ggplot, type install.packages("ggplot2") into the console. 
+library("gganimate") # to animate ggplots
+library("gifski") # to render animated figures
+library("magick") # for compositing GIFs
+source("advancedStructureFunctions.R") # This is a companion file that contains some functions specifically written for this script. 
+```
+
+
+```{r}
+
+# The velocity gradient tensor L is a tensor that describes the velocity (speed + direction) of all points in space. In this homework, we will use work with the 2D case, in which L is a 2x2 matrix. 
+
+# L takes the form: 
+
+#      | exDot    gammaDot |
+# L =  | 0        -eyDot   |
+
+
+#         Y
+#         |
+#         |
+#         |
+#         | 
+# ————————|—————————— X
+#         |
+#         |
+#         | 
+#         |
+     
+# Below is an example of a velocity field
+     
+exDot = 0.05
+gammaDot = 0
+c = 0
+eyDot = -exDot
+     #-exDot #this is true if volume is perserved, i.e. the material is incompressible 
+
+velGradTens = rbind(c(exDot, gammaDot),
+                    c(c    ,    eyDot))
+
+# Plot the 2D velocity gradient in (x,y) space
+
+plot2DVelocityFieldFromL(exDot, gammaDot, 0, eyDot , gridSpacing = 2.5)
+
+
+t = 10
+
+if (exDot == 0) {
+     
+     posGradTens = rbind(c(exp(exDot*t), gammaDot * t          ),
+                    c(0           , exp(eyDot*t)               )) 
+     
+} else {
+          
+     posGradTens = rbind(c(exp(exDot*t), gammaDot/exDot*sinh(exDot*t)),
+                    c(0           , exp(eyDot*t)               ))
+     
+     }
+
+
+plot2DCircleDisplacementFieldFromF(posGradTens[1,1], posGradTens[1,2], posGradTens[2,1], posGradTens[2,2])
+
+
+
+#anim_save("GeneralShear.gif", animation=plot, height = 5, width = 10, units = "in", res = 150)
+
+```
+
+```{r}
+plotParticles = plotParticlePaths(velGradTens, totalTime = t, numberOfIncrements = 100, gridSpacing = 2, superimposeStrain = FALSE, superimposeMaterialLine = FALSE, materialLineAngle = 45)
+
+   
+plotParticles
+
+```
+
+
+
+```{r}
+plotParticlesAndStrain = plotParticlePaths(velGradTens, totalTime = t, numberOfIncrements = 100, gridSpacing = 2, superimposeStrain = TRUE, superimposeMaterialLine = FALSE, materialLineAngle = 45)
+
+   
+plotParticlesAndStrain[[1]]
+
+plotParticlesAndStrain[[2]]
+```
+
+
+```{r}
+plotParticlesStrainAndMaterial = plotParticlePaths(velGradTens, totalTime = t, numberOfIncrements = 100, gridSpacing = 2, superimposeStrain = TRUE, superimposeMaterialLine = TRUE, materialLineAngle = 150)
+
+   
+plotParticlesStrainAndMaterial[[1]]
+
+plotParticlesStrainAndMaterial[[2]]
+
+```
+
+
+```{r}
+# Make composit GIF
+
+plot = plotParticlesStrainAndMaterial
+
+aGIF = animate(plot[[1]], width =  920, height = 480) 
+
+bGIF <- animate(plot[[2]], width = 480, height = 480)
+
+a_mgif <- image_read(aGIF)
+b_mgif <- image_read(bGIF)
+
+new_gif <- image_append(c(a_mgif[1], b_mgif[1]))
+for(i in 2:100){
+  combined <- image_append(c(a_mgif[i], b_mgif[i]))
+  new_gif <- c(new_gif, combined)
+}
+
+#new_gif
+
+anim_save("GeneralShear_materialLine48deg.gif", animation=new_gif)
+          
+          
+          #height = 5, width = 10, units = "in", res = 150)
+
+```
+
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
